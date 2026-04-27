@@ -5,12 +5,21 @@ After=network-online.target
 [Container]
 Image={{ smallstep_ca_image }}
 ContainerName={{ smallstep_ca_container_name }}
-Environment=DOCKER_STEPCA_INIT_PASSWORD={{ smallstep_ca_password }}
+User={{ ansible_facts.getent_passwd[smallstep_ca_user][1] }}
+Group={{ ansible_facts.getent_group[smallstep_ca_group][1] }}
 Environment=DOCKER_STEPCA_INIT_NAME={{ smallstep_ca_name }}
 Environment=DOCKER_STEPCA_INIT_DNS_NAMES={{ smallstep_ca_dns_names | join(',') }}
 Environment=DOCKER_STEPCA_INIT_ACME=true
 Volume={{ smallstep_ca_data_dir }}:/home/step:Z
 PublishPort=9000:9000
+
+{% if smallstep_ca_healthcheck_enabled %}
+HealthCmd={{ smallstep_ca_healthcheck_cmd }}
+HealthInterval={{ smallstep_ca_healthcheck_interval }}
+HealthRetries={{ smallstep_ca_healthcheck_retries }}
+HealthStartPeriod={{ smallstep_ca_healthcheck_start_period }}
+HealthTimeout={{ smallstep_ca_healthcheck_timeout }}
+{% endif %}
 
 [Service]
 Restart=always

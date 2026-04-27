@@ -1,0 +1,5 @@
+---
+smallstep_ca_name: lab
+smallstep_ca_dns_names:
+  - localhost
+  - matchbox.lab.internal
