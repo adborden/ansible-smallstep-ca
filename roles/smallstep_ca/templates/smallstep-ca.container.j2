@@ -1,0 +1,19 @@
+[Unit]
+Description=Smallstep CA Container
+After=network-online.target
+
+[Container]
+Image={{ smallstep_ca_image }}
+ContainerName={{ smallstep_ca_container_name }}
+Environment=DOCKER_STEPCA_INIT_PASSWORD={{ smallstep_ca_password }}
+Environment=DOCKER_STEPCA_INIT_NAME={{ smallstep_ca_name }}
+Environment=DOCKER_STEPCA_INIT_DNS_NAMES={{ smallstep_ca_dns_names | join(',') }}
+Environment=DOCKER_STEPCA_INIT_ACME=true
+Volume={{ smallstep_ca_data_dir }}:/home/step:Z
+PublishPort=9000:9000
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target

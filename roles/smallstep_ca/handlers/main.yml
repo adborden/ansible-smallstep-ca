@@ -1,0 +1,10 @@
+---
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Restart smallstep-ca
+  ansible.builtin.systemd:
+    name: "{{ smallstep_ca_service_name }}"
+    state: restarted
+  when: not is_molecule | default(false)

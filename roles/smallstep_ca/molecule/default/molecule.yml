@@ -1,0 +1,26 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: podman
+platforms:
+  - name: instance
+    image: ubuntu:24.04
+    dockerfile: Dockerfile.j2
+    privileged: true
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns: host
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        is_molecule: true
+verifier:
+  name: testinfra
