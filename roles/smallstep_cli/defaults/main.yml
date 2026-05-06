@@ -1,0 +1,18 @@
+---
+smallstep_cli_image: docker.io/smallstep/step-cli:0.30.2
+smallstep_cli_dir: /etc/smallstep
+smallstep_cli_cert_path: "{{ smallstep_cli_dir }}/cert.pem"
+smallstep_cli_key_path: "{{ smallstep_cli_dir }}/key.pem"
+smallstep_cli_root_ca_path: "{{ smallstep_cli_dir }}/root.crt"
+
+smallstep_cli_user: smallstep
+smallstep_cli_group: smallstep
+
+smallstep_cli_ca_url: "https://localhost:9000"
+smallstep_cli_ca_fingerprint: "" # Required if root cert not present
+smallstep_cli_provisioner: acme
+smallstep_cli_podman_args: ""
+
+# Systemd configuration
+smallstep_cli_systemd_dir: /etc/containers/systemd
+smallstep_cli_reload_services: []

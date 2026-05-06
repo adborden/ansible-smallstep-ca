@@ -1,10 +1,14 @@
 [Unit]
 Description=Smallstep CA Container
-After=network-online.target
+Wants=network-online.target
+After=network-online.target nss-lookup.target
 
 [Container]
 Image={{ smallstep_ca_image }}
 ContainerName={{ smallstep_ca_container_name }}
+{% if smallstep_ca_podman_args is defined %}
+PodmanArgs={{ smallstep_ca_podman_args }}
+{% endif %}
 User={{ ansible_facts.getent_passwd[smallstep_ca_user][1] }}
 Group={{ ansible_facts.getent_group[smallstep_ca_group][1] }}
 Environment=DOCKER_STEPCA_INIT_NAME={{ smallstep_ca_name }}

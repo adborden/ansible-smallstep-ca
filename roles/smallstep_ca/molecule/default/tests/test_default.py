@@ -10,16 +10,16 @@ def test_data_directory(host):
     d = host.file("/var/lib/smallstep-ca")
     assert d.is_directory
     assert d.mode == 0o750
-    assert d.user == "step"
-    assert d.group == "step"
+    assert d.user == "smallstep"
+    assert d.group == "smallstep"
 
 
 def test_system_user_group(host):
-    u = host.user("step")
+    u = host.user("smallstep")
     assert u.exists
-    assert u.group == "step"
+    assert u.group == "smallstep"
 
-    g = host.group("step")
+    g = host.group("smallstep")
     assert g.exists
 
 
@@ -29,8 +29,8 @@ def test_quadlet_file(host):
     assert f.is_file
     assert f.user == "root"
     assert "Image=docker.io/smallstep/step-ca:" in f.content_string
-    u = host.user("step")
-    g = host.group("step")
+    u = host.user("smallstep")
+    g = host.group("smallstep")
     assert f"User={u.uid}" in f.content_string
     assert f"Group={g.gid}" in f.content_string
 

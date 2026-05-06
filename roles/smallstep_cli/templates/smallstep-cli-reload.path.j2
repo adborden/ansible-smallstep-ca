@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch Smallstep Certificate for Changes
+
+[Path]
+PathChanged={{ smallstep_cli_cert_path }}
+Unit=smallstep-cli-reload.service
+
+[Install]
+WantedBy=multi-user.target

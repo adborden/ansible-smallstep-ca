@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer for Smallstep Certificate Cleanup
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=5m
+Persistent=true
+
+[Install]
+WantedBy=timers.target

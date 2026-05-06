@@ -4,14 +4,16 @@ smallstep_ca_container_name: smallstep-ca
 smallstep_ca_data_dir: /var/lib/smallstep-ca
 smallstep_ca_config_dir: /etc/smallstep-ca
 
-smallstep_ca_user: step
-smallstep_ca_group: step
+smallstep_ca_user: smallstep
+smallstep_ca_group: smallstep
+smallstep_ca_cert_access_group: cert-access
 
 # Step-CA configuration
 smallstep_ca_name: "Smallstep CA"
 smallstep_ca_password: "password" # Should be overridden in production
 smallstep_ca_dns_names:
   - localhost
+smallstep_ca_podman_args: ""
 
 # Systemd configuration
 smallstep_ca_service_name: smallstep-ca

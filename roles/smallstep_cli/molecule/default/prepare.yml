@@ -1,0 +1,22 @@
+---
+- name: Prepare
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Start step-ca container
+      containers.podman.podman_container:
+        name: step-ca
+        image: docker.io/smallstep/step-ca:0.30.2
+        state: started
+        recreate: true
+        network_mode: host
+        env:
+          DOCKER_STEPCA_INIT_PASSWORD: "password"
+          DOCKER_STEPCA_INIT_NAME: "Smallstep CA"
+          DOCKER_STEPCA_INIT_DNS_NAMES: "localhost"
+          DOCKER_STEPCA_INIT_ACME: "true"
+
+    - name: Wait for step-ca to be ready
+      wait_for:
+        port: 9000
+        timeout: 60

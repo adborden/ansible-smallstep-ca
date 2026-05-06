@@ -1,6 +1,12 @@
 ---
 - name: Deploy Smallstep CA
-  hosts: all
+  hosts: ca
   become: true
   roles:
     - smallstep_ca
+
+- name: Deploy Smallstep Certificates
+  hosts: nodes
+  become: true
+  roles:
+    - smallstep_cli

@@ -1,0 +1,8 @@
+---
+namespace: adborden
+name: smallstep
+description: Smallstep certificate authority and client related roles, executed through podman quadlet services.
+authors:
+  - adborden
+readme: https://github.com/adborden/ansible-smallstep-ca/blob/main/README.md
+version: 0.0.1
