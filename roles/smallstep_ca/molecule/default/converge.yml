@@ -3,4 +3,4 @@
   hosts: all
   become: true
   roles:
-    - role: adborden.smallstep_ca
+    - role: adborden.smallstep.smallstep_ca

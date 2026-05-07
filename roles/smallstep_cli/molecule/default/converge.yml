@@ -15,4 +15,4 @@
         smallstep_cli_ca_fingerprint: "{{ ca_fingerprint.stdout }}"
 
   roles:
-    - role: adborden.smallstep_cli
+    - role: adborden.smallstep.smallstep_cli
