@@ -1,15 +1,28 @@
 ---
-smallstep_ca_image: docker.io/smallstep/step-ca:latest
+smallstep_ca_image: docker.io/smallstep/step-ca:0.30.2
 smallstep_ca_container_name: smallstep-ca
 smallstep_ca_data_dir: /var/lib/smallstep-ca
 smallstep_ca_config_dir: /etc/smallstep-ca
+
+smallstep_ca_user: smallstep
+smallstep_ca_group: smallstep
+smallstep_ca_cert_access_group: cert-access
 
 # Step-CA configuration
 smallstep_ca_name: "Smallstep CA"
 smallstep_ca_password: "password" # Should be overridden in production
 smallstep_ca_dns_names:
   - localhost
+smallstep_ca_podman_args: ""
 
 # Systemd configuration
 smallstep_ca_service_name: smallstep-ca
 smallstep_ca_systemd_dir: /etc/containers/systemd
+
+# Health check configuration
+smallstep_ca_healthcheck_enabled: true
+smallstep_ca_healthcheck_cmd: "curl -f -k https://localhost:9000/health || exit 1"
+smallstep_ca_healthcheck_interval: 30s
+smallstep_ca_healthcheck_retries: 3
+smallstep_ca_healthcheck_start_period: 30s
+smallstep_ca_healthcheck_timeout: 5s

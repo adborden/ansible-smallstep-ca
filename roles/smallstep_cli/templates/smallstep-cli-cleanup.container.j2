@@ -1,0 +1,18 @@
+[Unit]
+Description=Cleanup Expired Smallstep Certificate
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Container]
+Image={{ smallstep_cli_image }}
+{% if smallstep_cli_podman_args %}
+PodmanArgs={{ smallstep_cli_podman_args }}
+{% endif %}
+Volume={{ smallstep_cli_dir }}:{{ smallstep_cli_dir }}:Z
+Exec=bash -c 'if ! step certificate verify {{ smallstep_cli_cert_path }} --roots {{ smallstep_cli_root_ca_path }}; then rm -f {{ smallstep_cli_cert_path }} {{ smallstep_cli_key_path }}; fi'
+User={{ getent_passwd[smallstep_cli_user][1] }}
+Group={{ smallstep_group.gid }}
+
+[Service]
+Type=oneshot
+Restart=no

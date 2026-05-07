@@ -1,0 +1,7 @@
+[Unit]
+Description=Reload Services on Smallstep Certificate Change
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c 'for service in {{ smallstep_cli_reload_services | join(" ") }}; do systemctl reload-or-restart "$service"; done'

@@ -1,0 +1,42 @@
+FROM {{ item.image | default('ubuntu:24.04') }}
+
+ENV container docker
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  ca-certificates \
+  systemd \
+  systemd-sysv \
+  libpam-systemd \
+  dbus \
+  dbus-user-session \
+  sudo \
+  python3 \
+  iproute2 \
+  podman \
+  fuse-overlayfs \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+## Configure podman to use fuse-overlayfs for nested environments
+#RUN mkdir -p /etc/containers && \
+#    (echo '[storage]'; \
+#     echo 'driver = "overlay"'; \
+#     echo '[storage.options.overlay]'; \
+#     echo 'mount_program = "/usr/bin/fuse-overlayfs"') > /etc/containers/storage.conf
+
+# Remove unnecessary systemd units
+RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
+  /etc/systemd/system/*.wants/* \
+  /lib/systemd/system/local-fs.target.wants/* \
+  /lib/systemd/system/sockets.target.wants/*udev* \
+  /lib/systemd/system/sockets.target.wants/*initctl* \
+  /lib/systemd/system/basic.target.wants/* \
+  /lib/systemd/system/anaconda.target.wants/* \
+  /lib/systemd/system/plymouth* \
+  /lib/systemd/system/systemd-update-utmp*
+
+VOLUME [ "/sys/fs/cgroup" ]
+
+CMD ["/lib/systemd/systemd"]

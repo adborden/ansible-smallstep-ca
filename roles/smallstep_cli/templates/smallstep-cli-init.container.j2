@@ -1,0 +1,23 @@
+[Unit]
+Description=Initialize Smallstep Certificate
+Wants=network-online.target
+After=network-online.target nss-lookup.target
+
+[Container]
+Image={{ smallstep_cli_image }}
+{% if smallstep_cli_podman_args %}
+PodmanArgs={{ smallstep_cli_podman_args }}
+{% endif %}
+Volume={{ smallstep_cli_dir }}:{{ smallstep_cli_dir }}:Z
+Exec=bash -c 'if ! step certificate verify {{ smallstep_cli_cert_path }} --roots {{ smallstep_cli_root_ca_path }} ; then step ca certificate {{ ansible_facts['fqdn'] }} {{ smallstep_cli_cert_path }} {{ smallstep_cli_key_path }} --ca-url {{ smallstep_cli_ca_url }} --root {{ smallstep_cli_root_ca_path }} --provisioner {{ smallstep_cli_provisioner }} --standalone --http-listen :8000 --force ; fi'
+PublishPort=80:8000
+User={{ getent_passwd[smallstep_cli_user][1] }}
+Group={{ smallstep_group.gid }}
+
+[Service]
+Type=oneshot
+Restart=no
+ExecStartPost=/usr/bin/chmod 0640 {{ smallstep_cli_cert_path }} {{ smallstep_cli_key_path }}
+
+[Install]
+WantedBy=multi-user.target

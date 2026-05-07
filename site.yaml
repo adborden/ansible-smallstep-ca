@@ -1,6 +1,0 @@
----
-- name: Deploy Smallstep CA
-  hosts: all
-  become: true
-  roles:
-    - adborden.smallstep_ca

@@ -1,0 +1,83 @@
+---
+- name: Create smallstep group
+  ansible.builtin.group:
+    name: "{{ smallstep_cli_group }}"
+    system: true
+    state: present
+  register: smallstep_group
+
+- name: Create smallstep user
+  ansible.builtin.user:
+    name: "{{ smallstep_cli_user }}"
+    group: "{{ smallstep_cli_group }}"
+    system: true
+    state: present
+
+- name: Get smallstep uid
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ smallstep_cli_user }}"
+
+- name: Ensure smallstep directory exists
+  ansible.builtin.file:
+    path: "{{ smallstep_cli_dir }}"
+    state: directory
+    owner: "{{ smallstep_cli_user }}"
+    group: "{{ smallstep_cli_group }}"
+    mode: "2750"
+
+- name: Download root CA certificate
+  ansible.builtin.get_url:
+    url: "{{ smallstep_cli_ca_url }}/roots.pem"
+    dest: "{{ smallstep_cli_dir }}/root.crt"
+    mode: "0644"
+    validate_certs: false # We need to fetch the root.crt before we can trust it.
+
+- name: Create systemd container directory
+  ansible.builtin.file:
+    path: "{{ smallstep_cli_systemd_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Deploy smallstep-cli container files
+  ansible.builtin.template:
+    src: "{{ item }}.container.j2"
+    dest: "{{ smallstep_cli_systemd_dir }}/{{ item }}.container"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - smallstep-cli-init
+    - smallstep-cli-renew
+    - smallstep-cli-cleanup
+  notify: Reload systemd
+
+- name: Deploy smallstep-cli systemd units
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop:
+    - smallstep-cli-cleanup.timer
+    - smallstep-cli-reload.service
+    - smallstep-cli-reload.path
+  notify: Reload systemd
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable and start smallstep-cli services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - smallstep-cli-init.service
+    - smallstep-cli-renew.service
+    - smallstep-cli-cleanup.timer
+    - smallstep-cli-reload.path
+  when: not (ansible_virtualization_type == 'container' and ansible_virtualization_role == 'guest')

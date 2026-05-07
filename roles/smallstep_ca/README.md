@@ -9,16 +9,16 @@ This role deploys a `smallstep-ca` container using Podman Quadlet (`.container` 
 
 ## Role Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `smallstep_ca_image` | `docker.io/smallstep/step-ca:latest` | The container image to use. |
-| `smallstep_ca_container_name` | `smallstep-ca` | Name of the container. |
-| `smallstep_ca_data_dir` | `/var/lib/smallstep-ca` | Host directory for CA data. |
-| `smallstep_ca_name` | `Smallstep CA` | Name of the CA. |
-| `smallstep_ca_password` | `password` | Password for CA initialization. |
-| `smallstep_ca_dns_names` | `[localhost, {{ ansible_fqdn }}]` | DNS names for the CA. |
-| `smallstep_ca_service_name` | `smallstep-ca` | Systemd service name. |
-| `smallstep_ca_systemd_dir` | `/etc/containers/systemd` | Directory for Quadlet files. |
+| Variable                      | Default                              | Description                     |
+| ----------------------------- | ------------------------------------ | ------------------------------- |
+| `smallstep_ca_image`          | `docker.io/smallstep/step-ca:latest` | The container image to use.     |
+| `smallstep_ca_container_name` | `smallstep-ca`                       | Name of the container.          |
+| `smallstep_ca_data_dir`       | `/var/lib/smallstep-ca`              | Host directory for CA data.     |
+| `smallstep_ca_name`           | `Smallstep CA`                       | Name of the CA.                 |
+| `smallstep_ca_password`       | `password`                           | Password for CA initialization. |
+| `smallstep_ca_dns_names`      | `[localhost, {{ ansible_fqdn }}]`    | DNS names for the CA.           |
+| `smallstep_ca_service_name`   | `smallstep-ca`                       | Systemd service name.           |
+| `smallstep_ca_systemd_dir`    | `/etc/containers/systemd`            | Directory for Quadlet files.    |
 
 ## Example Playbook
 
@@ -33,6 +33,16 @@ This role deploys a `smallstep-ca` container using Podman Quadlet (`.container` 
           - ca.example.com
           - localhost
 ```
+
+### Notes
+
+Role generates a root and intermediate CA certificate and key. Once generated,
+you should save the root_ca_key offline. It's encrypted with the same password
+as the intermediate, stored in the `password` file.
+
+You can use `step` CLI to change the password.
+
+Consider limiting certificate generation with policies <https://smallstep.com/docs/step-ca/policies/#domain-names>
 
 ## License
 

@@ -1,0 +1,9 @@
+---
+- name: Cleanup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Stop and remove step-ca container
+      containers.podman.podman_container:
+        name: step-ca
+        state: absent

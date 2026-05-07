@@ -1,0 +1,28 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: podman
+platforms:
+  - name: instance
+    image: ubuntu:24.04
+    dockerfile: Dockerfile.j2
+    privileged: true
+    network: host
+    command: /lib/systemd/systemd
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns: host
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+  inventory:
+    group_vars:
+      all:
+        is_molecule: true
+        smallstep_cli_ca_url: "https://localhost:9000"
+        smallstep_cli_podman_args: "--network host"
+verifier:
+  name: testinfra
