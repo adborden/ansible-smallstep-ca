@@ -1,7 +1,0 @@
----
-smallstep_ca_name: lab
-smallstep_ca_dns_names:
-  - localhost
-  - matchbox.lab.internal
-
-smallstep_cli_ca_fingerprint: 141bb5291506dfd85de5a9bcd849491e5002f1aa39f5f9e8dac3d09cd8b7046b
