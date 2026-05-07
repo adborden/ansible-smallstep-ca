@@ -1,6 +1,6 @@
 [project]
 name = "smallstep-ca"
-version = "0.1.0"
+version = "1.0.0"
 description = ""
 authors = [{ name = "Aaron D Borden", email = "adborden@a14n.net" }]
 readme = "README.md"
