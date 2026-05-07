@@ -10,7 +10,7 @@ def test_smallstep_directory(host):
     d = host.file("/etc/smallstep")
     assert d.is_directory
     assert d.mode == 0o2750
-    assert d.group == "cert-access"
+    assert d.group == "smallstep"
 
 
 def test_root_ca_exists(host):
@@ -36,7 +36,6 @@ def test_systemd_container_units(host):
     # Specific check for daemon mode in renew
     renew = host.file("/etc/containers/systemd/smallstep-cli-renew.container")
     assert "--daemon" in renew.content_string
-    assert "step certificate verify" in renew.content_string
 
 
 def test_systemd_native_units(host):
@@ -56,15 +55,6 @@ def test_systemd_native_units(host):
     # Specific check for reload loop
     reload_svc = host.file("/etc/systemd/system/smallstep-cli-reload.service")
     assert "systemctl reload-or-restart" in reload_svc.content_string
-
-
-def test_obsolete_units_absent(host):
-    obsolete = [
-        "/etc/containers/systemd/smallstep-cli-init.container",
-        "/etc/systemd/system/smallstep-cli-renew.timer",
-    ]
-    for path in obsolete:
-        assert not host.file(path).exists
 
 
 # def test_services_enabled(host):

@@ -2,7 +2,5 @@
 - name: Converge
   hosts: all
   become: true
-  tasks:
-    - name: "Include smallstep_ca"
-      include_role:
-        name: "adborden.smallstep_ca"
+  roles:
+    - role: adborden.smallstep_ca
